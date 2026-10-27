@@ -21,13 +21,16 @@ export async function execute(
   options: ExecuteOptions,
   overrides: ExecuteOverrides = {},
 ): Promise<InstallResult | StatusResult> {
+  const platform = options.platform || 'copilot';
+  if (platform !== 'copilot' && platform !== 'codex') throw new Error('Unknown platform');
+  const metadataFile = platform === 'codex' ? '.exl-cloudapp-agent.codex.json' : METADATA_FILE;
   const packageRoot = overrides.packageRoot || path.resolve(__dirname, '../..');
   const targetRoot = await resolveTargetRoot(options.target || process.cwd());
   const packageInfo = await readDistribution(packageRoot);
   await validateCloudApp(targetRoot);
 
   const metadata = parseMetadata(
-    await readJson(path.join(targetRoot, METADATA_FILE), true),
+    await readJson(path.join(targetRoot, metadataFile), true),
     targetRoot,
     packageRoot,
   );
@@ -50,6 +53,7 @@ export async function execute(
   }
 
   return installOrUpdate({
+    platform,
     command: options.command,
     targetRoot,
     packageRoot,
