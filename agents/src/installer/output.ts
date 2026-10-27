@@ -7,6 +7,8 @@ export function usage(): string {
   exl-cloudapp-agent status [path]
   exl-cloudapp-agent --version
 
+Options: --platform codex|copilot (default: copilot), for install, update, and status.
+
 Commands:
   install  Install all or selected skills and safely adopt matching files.
   update   Update unchanged managed files to this distribution version.

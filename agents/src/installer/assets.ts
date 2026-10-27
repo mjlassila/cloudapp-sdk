@@ -2,11 +2,12 @@ import fsp from 'node:fs/promises';
 import path from 'node:path';
 
 import { listFiles, readChecksum, sha256, toPosix } from './filesystem';
-import type { Asset, InspectedAsset, InstallerMetadata } from './types';
+import type { Asset, InspectedAsset, InstallerMetadata, Platform } from './types';
 
 export async function createAssets(
   packageRoot: string,
   selectedSkills: string[],
+  platform: Platform = 'copilot',
 ): Promise<Asset[]> {
   const assets: Asset[] = [];
 
@@ -25,12 +26,14 @@ export async function createAssets(
     });
   };
 
-  for (const sourcePath of await listFiles(path.join(packageRoot, 'agents'))) {
-    await addFile(
-      sourcePath,
-      path.join('.github', 'agents', path.basename(sourcePath)),
-      'agent',
-    );
+  if (platform === 'copilot') {
+    for (const sourcePath of await listFiles(path.join(packageRoot, 'agents'))) {
+      await addFile(
+        sourcePath,
+        path.join('.github', 'agents', path.basename(sourcePath)),
+        'agent',
+      );
+    }
   }
 
   for (const skill of selectedSkills) {
@@ -38,7 +41,7 @@ export async function createAssets(
     for (const sourcePath of await listFiles(skillRoot)) {
       await addFile(
         sourcePath,
-        path.join('.github', 'skills', skill, path.relative(skillRoot, sourcePath)),
+        path.join(platform === 'codex' ? '.agents' : '.github', 'skills', skill, path.relative(skillRoot, sourcePath)),
         `skill:${skill}`,
       );
     }

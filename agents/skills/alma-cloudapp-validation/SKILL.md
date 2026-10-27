@@ -88,7 +88,8 @@ Before protected validation, establish:
    change persistent state.
 5. The exact approved mutation scope, if any.
 
-Use the structured question tool when these are unclear.
+Use the structured question tool when available; otherwise ask in chat and
+wait for required answers or authorization when these are unclear.
 
 ## Mutation safety
 

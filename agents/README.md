@@ -195,3 +195,20 @@ license, the same as the Cloud App SDK.
 - [https://developers.exlibrisgroup.com/cloudapps/](https://developers.exlibrisgroup.com/cloudapps/)
 - [https://github.com/ExLibrisGroup/cloudapp-sdk](https://github.com/ExLibrisGroup/cloudapp-sdk)
 - [https://github.com/ExLibrisGroup/cloudapp-sdk/tree/master/agents](https://github.com/ExLibrisGroup/cloudapp-sdk/tree/master/agents)
+
+## Codex
+
+Install into an Alma Cloud App project (not this SDK distribution):
+
+```sh
+npx @exlibris/exl-cloudapp-agent install /path/to/cloudapp --platform codex
+npx @exlibris/exl-cloudapp-agent status /path/to/cloudapp --platform codex
+npx @exlibris/exl-cloudapp-agent update /path/to/cloudapp --platform codex
+```
+
+With a CLI bundling this installer: `eca agents install --platform codex`.
+Without `--platform`, installation remains GitHub Copilot compatible.
+Codex uses root `AGENTS.md` for orchestration and `.agents/skills/` for the
+same 12 domain skills, references, and assets. No renamed Copilot agent or
+custom Codex subagent is installed. See [installation guidance](INSTALLATION.md#codex-support)
+for coexistence, prerequisites, and compatibility evidence.

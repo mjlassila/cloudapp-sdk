@@ -12,6 +12,7 @@ type ParsedArguments =
     target: string;
     skills?: string;
     dryRun: boolean;
+    platform?: 'codex' | 'copilot';
   };
 
 const executableCommands = ['install', 'update', 'status'] as const;
@@ -42,10 +43,17 @@ function parseArguments(argv: string[]): ParsedArguments {
   let targetSet = false;
   let skills: string | undefined;
   let dryRun = false;
+  let platform: 'codex' | 'copilot' | undefined;
 
   while (argv.length > 0) {
     const argument = argv.shift();
     if (argument === undefined) break;
+    if (argument === '--platform' || argument.startsWith('--platform=')) {
+      const value = argument === '--platform' ? argv.shift() : argument.slice(11);
+      if (value !== 'codex' && value !== 'copilot') throw new Error('--platform requires codex or copilot');
+      platform = value;
+      continue;
+    }
     if (argument === '--dry-run') {
       dryRun = true;
       continue;
@@ -77,7 +85,7 @@ function parseArguments(argv: string[]): ParsedArguments {
     throw new Error('--dry-run is not applicable to status');
   }
 
-  return { command, target, skills, dryRun };
+  return { command, target, skills, dryRun, platform };
 }
 
 async function main() {

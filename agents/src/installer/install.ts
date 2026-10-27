@@ -23,6 +23,7 @@ async function readText(filePath: string): Promise<string | undefined> {
 
 export async function installOrUpdate({
   command,
+  platform = 'copilot',
   targetRoot,
   packageRoot,
   selectedSkills,
@@ -30,7 +31,7 @@ export async function installOrUpdate({
   packageInfo,
   previousMetadata,
 }: InstallOrUpdateOptions): Promise<InstallResult> {
-  const assets = await createAssets(packageRoot, selectedSkills);
+  const assets = await createAssets(packageRoot, selectedSkills, platform);
   const inspected = await Promise.all(
     assets.map(asset => inspectAsset(asset, targetRoot, previousMetadata)),
   );
@@ -81,7 +82,7 @@ export async function installOrUpdate({
     };
   }
 
-  const metadataPath = path.join(targetRoot, METADATA_FILE);
+  const metadataPath = path.join(targetRoot, platform === 'codex' ? '.exl-cloudapp-agent.codex.json' : METADATA_FILE);
   const serializedMetadata = `${JSON.stringify(metadata, null, 2)}\n`;
   const metadataChanged = await readText(metadataPath) !== serializedMetadata;
   const shouldManage = Boolean(previousMetadata) || safeAssets.length > 0;

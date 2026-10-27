@@ -271,3 +271,65 @@ same version as the other SDK packages. Release notes should identify:
 - Migration requirements for installed copies.
 
 Do not claim compatibility with an SDK version that was not inspected.
+
+## Codex support
+
+Select `--platform codex` on **every** install, update, or status command;
+`--platform copilot` is the default. Both `--platform=codex` and the spaced
+form work. Installation remains scoped to the explicitly selected Cloud App.
+
+```sh
+exl-cloudapp-agent install /path/to/cloudapp --platform codex --dry-run
+exl-cloudapp-agent install /path/to/cloudapp --platform codex --skills alma-cloudapp-api,alma-cloudapp-testing
+exl-cloudapp-agent update /path/to/cloudapp --platform codex --dry-run
+exl-cloudapp-agent update /path/to/cloudapp --platform codex
+exl-cloudapp-agent status /path/to/cloudapp --platform codex
+# Equivalent from the target project, with a CLI bundling this installer:
+eca agents install --platform codex
+```
+
+The existing CLI forwards arguments to its bundled agent package; older CLI
+releases may bundle an installer without this option. Use the standalone
+installer or the built checkout (`node agents/dist/cli.js ...`) in that case.
+
+| Copilot capability | Codex equivalent |
+|---|---|
+| Developer `.agent.md` orchestration | Shared target `AGENTS.md`, including task classification, discovery, skill routing, acceptance criteria, evidence and final review |
+| `.github/skills/<name>/` | `.agents/skills/<name>/`, with identical skill content and bundled relative references |
+| Skill selection | Invoke `$alma-cloudapp-api`, another installed skill, or read its entire `SKILL.md` |
+| Structured questions | Available host question tool, otherwise chat and wait for required answers |
+| Live Playwright MCP | Configure Playwright MCP in the Codex host; installation does not configure servers or authentication |
+| Checksummed updates/status | Same installer with platform-specific metadata |
+
+Codex installation creates `.exl-cloudapp-agent.codex.json`; Copilot keeps
+`.exl-cloudapp-agent.json` and its existing schema-1 format. Commit the metadata
+with installed files. Old Copilot metadata requires no migration. Both platforms
+can coexist: their skill trees and metadata are independent, while identical
+root `AGENTS.md` and `CLAUDE.md` templates are shared and safely adopted.
+Codex does not install the Copilot agent profile. `CLAUDE.md` is retained as the
+existing delegation convenience; Codex relies on `AGENTS.md`.
+
+Customized or older root instructions are preserved and reported as conflicts.
+Review and merge the shared template manually before relying on its workflow;
+the installer does not silently append instructions. An update from either
+platform preserves root customizations. If one platform has updated a shared
+root file since the other recorded it, the latter may report a conflict; review
+that change rather than overwriting it. Selective installs may lack companion
+skills: install those skills when required, or report missing guidance.
+
+For manual Codex installation, copy `skills/*` to `.agents/skills/` and the
+shared templates to the target root, preserving existing instructions. No
+subagent TOML or custom tool names are needed. User-level installation is manual
+only: current Codex supports `~/.agents/skills/`; this installer never writes
+there. Project-specific guidance belongs in project `AGENTS.md`.
+
+Live Alma validation requires Playwright MCP, browser access, a supplied target
+and interactive approved authentication. Missing MCP access blocks live checks,
+not local builds/tests. Do not substitute `playwright-cli`. Standalone Angular
+rendering does not establish Alma embedding, authentication, entities, API or
+iframe behavior. Production remains observation-only, secrets stay out of
+source/logs/chat, and persistent live actions require explicit scoped approval.
+
+Compatibility and discovery evidence are recorded in
+[`references/codex-compatibility.md`](references/codex-compatibility.md) in the
+SDK checkout (maintainer references are not shipped in the npm package).

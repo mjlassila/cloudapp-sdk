@@ -69,3 +69,8 @@ $ eca start
 
 ## Documentation
 See the [Cloud Apps documentation](https://developers.exlibrisgroup.com/cloudapps/) on the Ex Libris Developer Network.
+
+For native Codex instructions and skills, run `eca agents install --platform codex`.
+Pass the same selector to `update` and `status`; omission defaults to Copilot.
+The bundled agent installer must support this option. See the SDK agents
+installation guide for standalone installation and coexistence details.
