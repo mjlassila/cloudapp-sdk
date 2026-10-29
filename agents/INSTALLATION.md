@@ -271,3 +271,89 @@ same version as the other SDK packages. Release notes should identify:
 - Migration requirements for installed copies.
 
 Do not claim compatibility with an SDK version that was not inspected.
+
+## OpenCode support
+
+Use an installer containing this change; the SDK version is unchanged until a
+release. Older published packages and Cloud App CLI releases may not support
+this selector. From a built SDK checkout:
+
+```sh
+node agents/dist/cli.js install /path/to/cloudapp --platform opencode --dry-run
+node agents/dist/cli.js install /path/to/cloudapp --platform opencode
+node agents/dist/cli.js status /path/to/cloudapp --platform opencode
+node agents/dist/cli.js update /path/to/cloudapp --platform opencode
+```
+
+With an installed release containing OpenCode support:
+
+```sh
+exl-cloudapp-agent install /path/to/cloudapp --platform opencode --skills alma-cloudapp-api,alma-cloudapp-testing
+exl-cloudapp-agent update /path/to/cloudapp --platform opencode --dry-run
+# From the target project, if eca bundles the updated installer:
+eca agents install --platform opencode
+eca agents status --platform opencode
+eca agents update --platform opencode
+```
+
+`--platform=opencode` also works. Omission still selects Copilot. Pass the
+selector on every command. Installation, update, selective skills, dry-run and status use the same checksum-managed installer protections.
+No application dependency, OpenCode configuration, credentials or permission
+settings are installed or changed.
+
+| Copilot capability | OpenCode equivalent |
+|---|---|
+| Developer agent orchestration | Root `AGENTS.md` task classification, discovery checkpoint, acceptance criteria, skill routing and proportional final review |
+| `.github/skills/<name>/SKILL.md` | `.agents/skills/<name>/SKILL.md`, sharing all 12 original skill sources, references and assets |
+| Skill loading | Native `skill({ name: "alma-cloudapp-api" })` tool, or reading the entire skill file |
+| Question tools | Available structured tool, otherwise chat and wait for required answers/authorization |
+| Live browser evidence | An explicitly configured Playwright MCP connection; never assumed present |
+| Managed updates | `.exl-cloudapp-agent.opencode.json` with existing schema-1 checksums |
+
+OpenCode reads `AGENTS.md` directly. It does not need a renamed Copilot agent,
+custom subagent, slash command or `opencode.json` for these workflows.
+`CLAUDE.md` remains the shared delegation convenience for other hosts;
+OpenCode prefers `AGENTS.md` when both are present. Skill references are
+loaded as needed; they are not automatically expanded merely by linking them.
+
+### Coexistence and conflicts
+
+Commit the platform's metadata with installed files. Copilot's existing
+`.exl-cloudapp-agent.json` remains compatible and unchanged by OpenCode
+metadata writes. Copilot has a separate
+`.github` tree. Root templates are shared by both platforms.
+
+The two platforms have separate skill trees and metadata. Shared root templates
+are safely adopted when identical. An update from either platform preserves
+customized root instructions and files changed since its last managed version,
+reporting conflicts rather than overwriting them. An existing customized
+`AGENTS.md` must be reviewed and manually merged with the template before
+relying on its orchestration. Conflicts never silently weaken project guidance.
+
+Selective installation does not supply omitted companion skills. Install a
+required companion or report its missing guidance; do not skip a safety rule.
+OpenCode may also discover skills from `.opencode`, `.claude`, global or ancestor
+locations. Avoid duplicate names, and inspect the host's skill permissions if a
+skill is hidden or denied. Do not automatically loosen permissions.
+
+### Prerequisites and limitations
+
+Use an OpenCode release supporting `.agents/skills` and the native `skill` tool.
+The installed project's SDK, Angular and source remain the compatibility
+baseline. Standard developer tooling remains npm and the project's `eca`.
+For live Alma checks, configure Playwright MCP in the OpenCode host using the
+current official MCP documentation, provide an authorized target and approved
+interactive authentication, and retain scoped approval for persistent actions.
+If these are unavailable, report live validation as blocked. Local rendering,
+builds and unit tests do not prove integrated Alma behavior. Never include
+credentials in configuration templates, source, chat or logs.
+
+Manual user-level skills can be placed under `~/.agents/skills/` or
+`~/.config/opencode/skills/`. Global instructions use
+`~/.config/opencode/AGENTS.md`. Automated installation never writes outside the
+selected Cloud App. Keep project SDK versions and workflows in project guidance.
+
+OpenCode runtime discovery and behavioral scenarios have not been verified in
+this environment because the OpenCode executable is unavailable. Official
+sources and exact manual verification steps are recorded in the SDK checkout's
+`references/opencode-compatibility.md` (maintainer references are not packaged).

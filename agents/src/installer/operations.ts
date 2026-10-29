@@ -2,7 +2,7 @@ import path from 'node:path';
 
 import { installOrUpdate } from './install';
 import {
-  METADATA_FILE,
+  metadataFileForPlatform,
   normalizeSkills,
   parseMetadata,
   readDistribution,
@@ -21,13 +21,16 @@ export async function execute(
   options: ExecuteOptions,
   overrides: ExecuteOverrides = {},
 ): Promise<InstallResult | StatusResult> {
+  const platform = options.platform || 'copilot';
+  if (platform !== 'copilot' && platform !== 'opencode') throw new Error('Unknown platform');
+  const metadataFile = metadataFileForPlatform(platform);
   const packageRoot = overrides.packageRoot || path.resolve(__dirname, '../..');
   const targetRoot = await resolveTargetRoot(options.target || process.cwd());
   const packageInfo = await readDistribution(packageRoot);
   await validateCloudApp(targetRoot);
 
   const metadata = parseMetadata(
-    await readJson(path.join(targetRoot, METADATA_FILE), true),
+    await readJson(path.join(targetRoot, metadataFile), true),
     targetRoot,
     packageRoot,
   );
@@ -50,6 +53,7 @@ export async function execute(
   }
 
   return installOrUpdate({
+    platform,
     command: options.command,
     targetRoot,
     packageRoot,

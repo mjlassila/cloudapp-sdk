@@ -3,7 +3,7 @@ import path from 'node:path';
 
 import { createAssets, groupAssets, inspectAsset } from './assets';
 import { isNodeError, writeAtomic } from './filesystem';
-import { METADATA_FILE, METADATA_SCHEMA_VERSION } from './project';
+import { metadataFileForPlatform, METADATA_SCHEMA_VERSION } from './project';
 import type {
   Conflict,
   InspectedAsset,
@@ -23,6 +23,7 @@ async function readText(filePath: string): Promise<string | undefined> {
 
 export async function installOrUpdate({
   command,
+  platform = 'copilot',
   targetRoot,
   packageRoot,
   selectedSkills,
@@ -30,7 +31,7 @@ export async function installOrUpdate({
   packageInfo,
   previousMetadata,
 }: InstallOrUpdateOptions): Promise<InstallResult> {
-  const assets = await createAssets(packageRoot, selectedSkills);
+  const assets = await createAssets(packageRoot, selectedSkills, platform);
   const inspected = await Promise.all(
     assets.map(asset => inspectAsset(asset, targetRoot, previousMetadata)),
   );
@@ -81,7 +82,7 @@ export async function installOrUpdate({
     };
   }
 
-  const metadataPath = path.join(targetRoot, METADATA_FILE);
+  const metadataPath = path.join(targetRoot, metadataFileForPlatform(platform));
   const serializedMetadata = `${JSON.stringify(metadata, null, 2)}\n`;
   const metadataChanged = await readText(metadataPath) !== serializedMetadata;
   const shouldManage = Boolean(previousMetadata) || safeAssets.length > 0;

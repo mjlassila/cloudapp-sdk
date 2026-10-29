@@ -29,6 +29,7 @@ export const subcommands = {
 
 export const flags = {
     agents: {
+        "--platform <copilot|opencode>": "Agent platform (default: copilot)",
         "--skills <names>": "Comma-separated skills to install (default: all)",
         "--dry-run": "Show planned changes without writing files",
     },

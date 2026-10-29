@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 import path from 'node:path';
+import type { Platform } from './installer/types';
 
 import { execute, formatResult, usage } from './installer';
 
@@ -12,6 +13,7 @@ type ParsedArguments =
     target: string;
     skills?: string;
     dryRun: boolean;
+    platform?: Platform;
   };
 
 const executableCommands = ['install', 'update', 'status'] as const;
@@ -42,10 +44,17 @@ function parseArguments(argv: string[]): ParsedArguments {
   let targetSet = false;
   let skills: string | undefined;
   let dryRun = false;
+  let platform: Platform | undefined;
 
   while (argv.length > 0) {
     const argument = argv.shift();
     if (argument === undefined) break;
+    if (argument === '--platform' || argument.startsWith('--platform=')) {
+      const value = argument === '--platform' ? argv.shift() : argument.slice(11);
+      if (value !== 'copilot' && value !== 'opencode') throw new Error('--platform requires copilot or opencode');
+      platform = value;
+      continue;
+    }
     if (argument === '--dry-run') {
       dryRun = true;
       continue;
@@ -77,7 +86,7 @@ function parseArguments(argv: string[]): ParsedArguments {
     throw new Error('--dry-run is not applicable to status');
   }
 
-  return { command, target, skills, dryRun };
+  return { command, target, skills, dryRun, platform };
 }
 
 async function main() {

@@ -195,3 +195,21 @@ license, the same as the Cloud App SDK.
 - [https://developers.exlibrisgroup.com/cloudapps/](https://developers.exlibrisgroup.com/cloudapps/)
 - [https://github.com/ExLibrisGroup/cloudapp-sdk](https://github.com/ExLibrisGroup/cloudapp-sdk)
 - [https://github.com/ExLibrisGroup/cloudapp-sdk/tree/master/agents](https://github.com/ExLibrisGroup/cloudapp-sdk/tree/master/agents)
+
+## OpenCode
+
+From a built checkout, install into your Cloud App project:
+
+```sh
+node agents/dist/cli.js install /path/to/cloudapp --platform opencode
+node agents/dist/cli.js status /path/to/cloudapp --platform opencode
+node agents/dist/cli.js update /path/to/cloudapp --platform opencode
+```
+
+With a CLI bundling the updated installer, use `eca agents install --platform
+opencode` from the target project. OpenCode loads root `AGENTS.md` and all 12
+shared domain skills under `.agents/skills/`, using its native `skill` tool.
+No custom OpenCode agent or configuration is installed. Copilot remains the
+default. See
+[OpenCode installation guidance](INSTALLATION.md#opencode-support) for selective
+skills, dry-run, updates, conflicts, MCP prerequisites and runtime limitations.

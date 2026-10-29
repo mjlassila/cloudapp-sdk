@@ -194,17 +194,43 @@ data and compare the actual response with the rendered outcome.
 
 ## Skills
 
+Use `.agents/skills/` for OpenCode and `.github/skills/` for Copilot.
+The table lists Copilot and OpenCode paths respectively. If a companion is
+absent, install it or report the missing guidance; never skip its safety boundaries.
+
 | Work | Path |
 |---|---|
-| Project and CLI | `.github/skills/alma-cloudapp-project/SKILL.md` |
-| Code practices | `.github/skills/alma-cloudapp-code-practices/SKILL.md` |
-| SDK and Alma APIs | `.github/skills/alma-cloudapp-api/SKILL.md` |
-| Library Open Workflows | `.github/skills/alma-cloudapp-open-workflows/SKILL.md` |
-| Manifest and security | `.github/skills/alma-cloudapp-manifest/SKILL.md` |
-| Translations | `.github/skills/alma-cloudapp-translations/SKILL.md` |
-| Styles and theming | `.github/skills/alma-cloudapp-styles/SKILL.md` |
-| UI/UX | `.github/skills/alma-cloudapp-ui-ux/SKILL.md` |
-| Testing | `.github/skills/alma-cloudapp-testing/SKILL.md` |
-| SDK migration | `.github/skills/alma-cloudapp-sdk-migration/SKILL.md` |
-| Release | `.github/skills/alma-cloudapp-release/SKILL.md` |
-| Validation | `.github/skills/alma-cloudapp-validation/SKILL.md` |
+| Project and CLI | `.github/skills/alma-cloudapp-project/SKILL.md` / `.agents/skills/alma-cloudapp-project/SKILL.md` |
+| Code practices | `.github/skills/alma-cloudapp-code-practices/SKILL.md` / `.agents/skills/alma-cloudapp-code-practices/SKILL.md` |
+| SDK and Alma APIs | `.github/skills/alma-cloudapp-api/SKILL.md` / `.agents/skills/alma-cloudapp-api/SKILL.md` |
+| Library Open Workflows | `.github/skills/alma-cloudapp-open-workflows/SKILL.md` / `.agents/skills/alma-cloudapp-open-workflows/SKILL.md` |
+| Manifest and security | `.github/skills/alma-cloudapp-manifest/SKILL.md` / `.agents/skills/alma-cloudapp-manifest/SKILL.md` |
+| Translations | `.github/skills/alma-cloudapp-translations/SKILL.md` / `.agents/skills/alma-cloudapp-translations/SKILL.md` |
+| Styles and theming | `.github/skills/alma-cloudapp-styles/SKILL.md` / `.agents/skills/alma-cloudapp-styles/SKILL.md` |
+| UI/UX | `.github/skills/alma-cloudapp-ui-ux/SKILL.md` / `.agents/skills/alma-cloudapp-ui-ux/SKILL.md` |
+| Testing | `.github/skills/alma-cloudapp-testing/SKILL.md` / `.agents/skills/alma-cloudapp-testing/SKILL.md` |
+| SDK migration | `.github/skills/alma-cloudapp-sdk-migration/SKILL.md` / `.agents/skills/alma-cloudapp-sdk-migration/SKILL.md` |
+| Release | `.github/skills/alma-cloudapp-release/SKILL.md` / `.agents/skills/alma-cloudapp-release/SKILL.md` |
+| Validation | `.github/skills/alma-cloudapp-validation/SKILL.md` / `.agents/skills/alma-cloudapp-validation/SKILL.md` |
+
+## Host capabilities
+
+For OpenCode, this file provides the developer orchestration; no custom agent
+profile or subagent configuration is required.
+In OpenCode, load an owning skill using its native `skill` tool, for example
+`skill({ name: "alma-cloudapp-api" })`, or read its entire `SKILL.md`.
+OpenCode discovers skills on demand; this distribution does not add slash
+commands. If a required skill is hidden or denied by host permissions, report the blocker instead of
+silently skipping it. Do not weaken permissions to make it available.
+Use available search, file, and shell tools without assuming Copilot tool names.
+When a structured question tool is unavailable, ask in chat and wait for any
+required answer or authorization. Live browser validation requires a configured
+Playwright MCP server with access to the selected browser and Alma environment.
+If it is unavailable, report live checks as blocked; do not substitute
+playwright-cli or claim a standalone render verifies Alma integration.
+
+Classify work as a new app, feature, fix, review, SDK migration, or release.
+Establish whether the endpoint is a prototype, implemented change, validated
+change, release candidate, or publication. Load release or migration guidance
+only for requested work. Preserve acceptance criteria and decisions between
+phases. Review the actual final diff separately from implementation.
