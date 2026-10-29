@@ -1,3 +1,5 @@
+export type Platform = 'copilot' | 'opencode';
+
 export type InstallerCommand = 'install' | 'update';
 export type Command = InstallerCommand | 'status';
 export type FileAction = 'create' | 'update' | 'unchanged' | 'conflict';
@@ -79,6 +81,7 @@ export interface StatusResult {
 }
 
 export interface ExecuteOptions {
+  platform?: Platform;
   command: Command;
   target?: string;
   skills?: string;
@@ -90,6 +93,7 @@ export interface ExecuteOverrides {
 }
 
 export interface InstallOrUpdateOptions {
+  platform?: Platform;
   command: InstallerCommand;
   targetRoot: string;
   packageRoot: string;

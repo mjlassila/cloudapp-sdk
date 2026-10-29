@@ -69,3 +69,8 @@ $ eca start
 
 ## Documentation
 See the [Cloud Apps documentation](https://developers.exlibrisgroup.com/cloudapps/) on the Ex Libris Developer Network.
+
+OpenCode uses `eca agents install --platform opencode` with a CLI bundling the
+updated installer. Pass `--platform opencode` to `status` and `update` too.
+It installs root guidance and shared `.agents/skills/`; see the SDK agents
+installation guide for coexistence and standalone usage.

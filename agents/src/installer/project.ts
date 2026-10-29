@@ -7,10 +7,15 @@ import type {
   ManagedFile,
   PackageInfo,
   PackageJson,
+  Platform,
 } from './types';
 
 export const METADATA_FILE = '.exl-cloudapp-agent.json';
 export const METADATA_SCHEMA_VERSION = 1;
+
+export function metadataFileForPlatform(platform: Platform): string {
+  return platform === 'copilot' ? METADATA_FILE : `.exl-cloudapp-agent.${platform}.json`;
+}
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null && !Array.isArray(value);
